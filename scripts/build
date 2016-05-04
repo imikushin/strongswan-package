@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+cd $(dirname $0)/..
+
+ARCH=${ARCH:?"ARCH not set"}
+AESNI=""
+[ "${ARCH}" == "amd64" ] && AESNI="--enable-aesni"
+
+./configure --enable-gcm ${AESNI} && make -j$(nproc) && make install
+
+cd /usr/local
+mv libexec/ipsec/charon sbin
+rm -rf share bin/* sbin/ipsec libexec
+find . -name "*.la" -exec rm -v {} \;
+find . -name "*.a"  -exec rm -v {} \;
+find . -name "*.so" -exec strip --strip-debug {} \;
+strip --strip-debug sbin/*

@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+cd $(dirname $0)/..
+
+VERSION=${VERSION:?"ARCH not set"}
+PACKAGE=${PACKAGE:?"ARCH not set"}
+ARCH=${ARCH:?"ARCH not set"}
+SUFFIX=""
+[ "${ARCH}" != "amd64" ] && SUFFIX="_${ARCH}"
+
+rm -rf ./dist/artifacts
+mkdir -p ./dist/artifacts/
+
+tar -cvzf ./dist/artifacts/strongswan-${VERSION}${PACKAGE}${SUFFIX}.tar.gz $(find /usr/local \! -type d)
+ls -lah ./dist/artifacts/strongswan-${VERSION}${PACKAGE}${SUFFIX}.tar.gz

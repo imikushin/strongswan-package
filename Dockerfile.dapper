@@ -1,0 +1,22 @@
+FROM ubuntu:16.04
+# FROM arm64=aarch64/ubuntu:16.04 arm=armhf/ubuntu:16.04
+
+ARG DAPPER_HOST_ARCH
+ENV HOST_ARCH=${DAPPER_HOST_ARCH} ARCH=${DAPPER_HOST_ARCH}
+
+RUN apt-get update && apt-get install -y build-essential wget curl iproute2 && \
+    apt-get build-dep -y strongswan
+
+ARG VERSION=5.4.0
+ENV VERSION=${VERSION} PACKAGE="-r3"
+
+RUN wget https://download.strongswan.org/strongswan-${VERSION}.tar.bz2 && \
+    tar -xf strongswan-${VERSION}.tar.bz2 -C /
+
+ENV DAPPER_SOURCE /strongswan-${VERSION}
+ENV DAPPER_OUTPUT ./dist
+ENV HOME ${DAPPER_SOURCE}
+WORKDIR ${DAPPER_SOURCE}
+
+ENTRYPOINT ["./scripts/entry"]
+CMD ["ci"]

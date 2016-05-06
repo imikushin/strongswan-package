@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM armhf/ubuntu:16.04
 RUN apt-get update && apt-get install -y build-essential wget curl iproute2 && \
     apt-get build-dep -y strongswan
 
@@ -8,7 +8,6 @@ RUN tar xvf strongswan-${VERSION}.tar.bz2
 WORKDIR strongswan-${VERSION}
 RUN ./configure \
 	--enable-gcm \
-    --enable-aesni \
 	&& \
     make -j$(nproc) && \
     make install
